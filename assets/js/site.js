@@ -175,16 +175,16 @@ function productMatchesSearch(card,value){
 function renderCatalog(query){
   const q=query ?? searchInput?.value ?? '';
   let visible=0;
-  const ranked = normalizeSearch(q) ? getMatches(q) : [];
-  const rank = new Map(ranked.map((p,i)=>[p.index,i]));
+  const normalized=normalizeSearch(q);
+  const ranked=normalized?getMatches(q):[];
+  const exact=ranked.find(p=>normalizeSearch(p.name)===normalized);
   cards.forEach((card,index)=>{
     const category=card.dataset.category||'';
     const matchCategory=activeFilter==='all'||category===activeFilter;
-    const matchSearch=productMatchesSearch(card,q);
+    const matchSearch=exact ? index===exact.index : productMatchesSearch(card,q);
     const show=matchCategory&&matchSearch;
     card.style.display=show?'':'none';
     if(show) visible++;
-    card.style.order = show && rank.has(index) ? String(rank.get(index)) : '';
   });
   if(count) count.textContent=`${visible} product ${visible===1?'category':'categories'}`;
   if(empty) empty.style.display=visible?'none':'block';
