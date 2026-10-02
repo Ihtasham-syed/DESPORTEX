@@ -176,8 +176,8 @@ function renderCatalog(query){
   const q=query ?? searchInput?.value ?? '';
   let visible=0;
   const normalized=normalizeSearch(q);
-  const ranked=normalized?getMatches(q):[];
-  const exact=ranked.find(p=>normalizeSearch(p.name)===normalized);
+  const canonicalQuery=normalized.replace(/^t shirt$/,'t shirts').replace(/^tshirt$/,'t shirts').replace(/^tshirts$/,'t shirts').replace(/^tee$/,'t shirts').replace(/^tees$/,'t shirts');
+  const exact=productData.find(p=>normalizeSearch(p.name)===canonicalQuery);
   cards.forEach((card,index)=>{
     const category=card.dataset.category||'';
     const matchCategory=activeFilter==='all'||category===activeFilter;
