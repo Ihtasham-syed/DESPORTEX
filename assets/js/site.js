@@ -120,8 +120,8 @@ const productSearchTerms={
     'short sleeve shirt','short sleeve shirts','crew neck t shirt','crewneck t shirt','graphic tee','graphic tees',
     'streetwear tee','streetwear t shirt'
   ],
-  'joggers':[
-    'jogger','jogger pant','jogger pants','trouser','trousers','pants','pant','sweatpant','sweatpants',
+  'trousers':[
+    'trouser','trousers','pants','pant','jogger','joggers','jogger pant','jogger pants','sweatpant','sweatpants',
     'track pant','track pants','tracksuit bottoms','track bottoms','bottom','bottoms','casual trousers',
     'streetwear pants','streetwear trousers','jogging bottoms'
   ],
@@ -175,13 +175,16 @@ function productMatchesSearch(card,value){
 function renderCatalog(query){
   const q=query ?? searchInput?.value ?? '';
   let visible=0;
-  cards.forEach(card=>{
+  const ranked = normalizeSearch(q) ? getMatches(q) : [];
+  const rank = new Map(ranked.map((p,i)=>[p.index,i]));
+  cards.forEach((card,index)=>{
     const category=card.dataset.category||'';
     const matchCategory=activeFilter==='all'||category===activeFilter;
     const matchSearch=productMatchesSearch(card,q);
     const show=matchCategory&&matchSearch;
     card.style.display=show?'':'none';
     if(show) visible++;
+    card.style.order = show && rank.has(index) ? String(rank.get(index)) : '';
   });
   if(count) count.textContent=`${visible} product ${visible===1?'category':'categories'}`;
   if(empty) empty.style.display=visible?'none':'block';
@@ -439,7 +442,7 @@ $$('form[data-web3forms]').forEach(form=>form.addEventListener('submit',async e=
 // V34 — structured B2B forms: dependent product dropdowns.
 const desportexProducts={
   Sportswear:['Football / Soccer Kits','Tracksuits','Teamwear','Training Wear','Gym Wear','Running Apparel','Other Sportswear'],
-  Streetwear:['Hoodies','T-Shirts','Joggers','Sweatshirts','Jackets','Co-Ord Sets','Other Streetwear'],
+  Streetwear:['Hoodies','T-Shirts','Trousers','Sweatshirts','Jackets','Co-Ord Sets','Other Streetwear'],
   'Private Label':['Private Label Apparel'],
   'Custom Manufacturing':['Custom Apparel Development'],
   Other:['Other / Not Listed']
