@@ -176,7 +176,7 @@ function renderCatalog(query){
   const q=query ?? searchInput?.value ?? '';
   let visible=0;
   const normalized=normalizeSearch(q);
-  const canonicalQuery=normalized.replace(/^t shirt$/,'t shirts').replace(/^tshirt$/,'t shirts').replace(/^tshirts$/,'t shirts').replace(/^tee$/,'t shirts').replace(/^tees$/,'t shirts');
+  const canonicalQuery=normalized.replace(/^t shirt(s)?$/,'t shirts').replace(/^tshirt(s)?$/,'t shirts').replace(/^tee(s)?$/,'t shirts');
   const exact=productData.find(p=>normalizeSearch(p.name)===canonicalQuery);
   cards.forEach((card,index)=>{
     const category=card.dataset.category||'';
